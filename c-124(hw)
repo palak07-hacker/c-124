@@ -1,0 +1,27 @@
+from flask import Flask, jsonify, request
+app= Flask(__name__)
+
+tasks = [ { 'id': 1, 'name': u'rahul', 'contact': u'9876543222', 'done': False }, { 'id': 2, 'name': u'raju', 'contact': u'9987644456', 'done': False } ]
+
+
+@app.route('/adddata', methods=['POST'])
+def add():
+    if not request.json:
+        return jsonify({'status':'error', 'message':'provide data'}, 400)
+    task={
+        'id': tasks[-1]['id']+1, 
+        'name': request.json['name'], 
+        'contact': request.json.get('contact', ''),
+        'done': False 
+    }
+    tasks.append(task)
+    return jsonify({'status':'success', 'message':'added successfully'})
+
+
+@app.route('/getdata')
+def getdata():
+    return jsonify({'data':tasks})
+
+
+if __name__=='__main__':
+    app.run(debug=True)
